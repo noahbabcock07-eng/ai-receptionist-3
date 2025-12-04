@@ -7,8 +7,16 @@ app = Flask(__name__)
 @app.route("/voice", methods=["POST"])
 def voice():
     resp = VoiceResponse()
-    gather = Gather(input="speech", timeout=3, action="/gather")
-    gather.say("Hello, thanks for calling. How can I assist you today?")
+    gather = Gather(
+    input="speech",
+    action="/process",
+    method="POST"
+)
+    gather.say(
+    "Hi, thanks for calling Adrian's Barber Shop. What can I do for you today?",
+   voice="Polly.Kendra",
+    language="en-US"
+)
     resp.append(gather)
     resp.redirect("/voice")
     return Response(str(resp), mimetype="text/xml")
@@ -18,7 +26,11 @@ def gather_handler():
     speech_result = request.form.get("SpeechResult")
     answer = handle_input(speech_result)
     resp = VoiceResponse()
-    resp.say(answer)
+    response.say(
+    "Okay, what time works best for you?",
+    voice="Polly.Kendra",
+    language="en-US"
+)
     resp.hangup()
     return Response(str(resp), mimetype="text/xml")
 
